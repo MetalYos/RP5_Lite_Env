@@ -96,7 +96,7 @@ function install_neovim() {
     cd ..
     
     # Remove the neovim folder that was cloned
-    rm -Rf neovim
+    sudo rm -Rf neovim
 }
 
 function install_neovim_prompt() {
@@ -151,7 +151,7 @@ function install_pico_sdk_prompt() {
 function configure_sakura() {
     # Download and install fonts using external script
     ORIG_DIR=`pwd`
-    cd $HOME/RPI5_Init
+    cd $WORK_DIR
     ./download_nerd_fonts.sh
 
     # Copy neovim config files
