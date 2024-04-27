@@ -79,6 +79,7 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+F2 exec firefox
 bindsym $mod+F3 exec sakura --class ranger -e ranger
 bindsym $mod+F8 exec thunderbird
+bindsym $mod+period exec "ddcutil setvcp 60 0x11"
 
 # change focus
 bindsym $mod+j focus left
