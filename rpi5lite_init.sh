@@ -144,6 +144,11 @@ function configure_ranger() {
     cp -r $WORK_DIR/ranger_config/* $HOME/.config
 }
 
+function reboot() {
+    echo -e "${GREEN}Installation completed! rebooting...${NO_COLOR}"
+    sudo reboot
+}
+
 
 cd ~
 
@@ -153,4 +158,5 @@ prompt "Do you want to install neovim?" "Skipping neovim installation" install_n
 prompt "Do you want to install raspberry pi pico sdk?" "Skipping pico SDK installation" install_pico_sdk
 prompt "Do you want to configure sakura?" "Skipping sakura configuration" configure_sakura
 prompt "Do you want to configure ranger?" "Skipping ranger configuration" configure_ranger
+prompt "Fo you want to reboot?" "Installation completed!" reboot
 
