@@ -1,8 +1,34 @@
 #!/bin/bash
 
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+NO_COLOR='\033[0m'
+
 WORK_DIR=$HOME/RP5_Lite_Env
 
+# $1 - prompt string
+# $2 - NO selection string
+# $3 - YES selection function
+function prompt() {
+    while true; do
+        # prompting for choice
+        read -p "$1 (y)es/(n)o/(c)ancel:- " choice
+
+        # giving choices there tasks using
+        case $choice in
+        [yY]* ) $3; break;;
+        [nN]* ) echo -e "${YELLOW}${2}${NO_COLOR}"; break;;
+        [cC]* ) echo -e "${RED}Installation cancelled${NO_COLOR}"; exit ;;
+        *) echo "input is not valid!" ;;
+        esac
+    done
+}
+
 function init_installs() {
+    echo -e "${GREEN}Updating and Upgrading apt, then installing initial packages${NO_COLOR}"
+
     # Update apt repositories
     sudo apt-get update
 
@@ -16,22 +42,10 @@ function init_installs() {
     xdg-user-dirs-update
 }
 
-function init_installs_prompt() {
-    while true; do
-        # prompting for choice
-        read -p "Do you want to install initial packages? (y)es/(n)o/(c)ancel:- " choice
-
-        # giving choices there tasks using
-        case $choice in
-        [yY]* ) init_installs; break;;
-        [nN]* ) echo "Skipping init installations"; break;;
-        [cC]* ) echo "Installation cancelled"; exit ;;
-        *) echo "input is not valid!" ;;
-        esac
-    done
-}
 
 function install_i3() {
+    echo -e "${GREEN}Installing the i3 desktop environment including lightdm greeter${NO_COLOR}"
+
     # Install X11
     sudo apt-get -y install xorg xclip
 
@@ -57,22 +71,10 @@ function install_i3() {
     cp -r $WORK_DIR/Pictures/* $HOME/Pictures
 }
 
-function install_i3_prompt() {
-    while true; do
-        # prompting for choice
-        read -p "Do you want to install the i3 desktop environment? (y)es/(n)o/(c)ancel:- " choice
-
-        # giving choices there tasks using
-        case $choice in
-        [yY]* ) install_i3; break;;
-        [nN]* ) echo "Skipping i3 environment installation"; break;;
-        [cC]* ) echo "Installation cancelled"; exit ;;
-        *) echo "input is not valid!" ;;
-        esac
-    done
-}
 
 function install_neovim() {
+    echo -e "${GREEN}Installing the latest version of Neovim${NO_COLOR}"
+
     #Install packages needed for neovim
     sudo apt-get -y install git cmake build-essential gettext npm ripgrep fd-find fswatch 
 
@@ -99,22 +101,9 @@ function install_neovim() {
     sudo rm -Rf neovim
 }
 
-function install_neovim_prompt() {
-    while true; do
-        # prompting for choice
-        read -p "Do you want to install neovim? (y)es/(n)o/(c)ancel:- " choice
-
-        # giving choices there tasks using
-        case $choice in
-        [yY]* ) install_neovim; break;;
-        [nN]* ) echo "Skipping neovim installation"; break;;
-        [cC]* ) echo "Installation cancelled"; exit ;;
-        *) echo "input is not valid!" ;;
-        esac
-    done
-}
-
 function install_pico_sdk() {
+    echo -e "${GREEN}Installing the Raspberry Pico SDK and Examples${NO_COLOR}"
+
     # Install packages need to build pico projects
     sudo apt-get -y install git cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential openocd gdb-multiarch screen
 
@@ -133,22 +122,9 @@ function install_pico_sdk() {
     echo 'export PICO_SDK_PATH=$HOME/pico/pico-sdk' >> $HOME/.bashrc
 }
 
-function install_pico_sdk_prompt() {
-    while true; do
-        # prompting for choice
-        read -p "Do you want to install raspberry pi pico sdk? (y)es/(n)o/(c)ancel:- " choice
-
-        # giving choices there tasks using
-        case $choice in
-        [yY]* ) install_pico_sdk; break;;
-        [nN]* ) echo "Skipping pico SDK installation"; break;;
-        [cC]* ) echo "Installation cancelled"; exit ;;
-        *) echo "input is not valid!" ;;
-        esac
-    done
-}
-
 function configure_sakura() {
+    echo -e "${GREEN}Configuring the Sakura terminal emulator, includs downloading and installing some Nerd Fonts${NO_COLOR}"
+
     # Download and install fonts using external script
     ORIG_DIR=`pwd`
     cd $WORK_DIR
@@ -161,50 +137,20 @@ function configure_sakura() {
     cd $ORIG_DIR
 }
 
-function configure_sakura_prompt() {
-    while true; do
-        # prompting for choice
-        read -p "Do you want to configure sakura? (y)es/(n)o/(c)ancel:- " choice
-
-        # giving choices there tasks using
-        case $choice in
-        [yY]* ) configure_sakura; break;;
-        [nN]* ) echo "Skipping sakura configuration"; break;;
-        [cC]* ) echo "Installation cancelled"; exit ;;
-        *) echo "input is not valid!" ;;
-        esac
-    done
-}
-
 function configure_ranger() {
-    # Unzip config files
+    echo -e "${GREEN}Configuring the Ranger file browser${NO_COLOR}"
  
     # Copy neovim config files
     cp -r $WORK_DIR/ranger_config/* $HOME/.config
 }
 
-function configure_ranger_prompt() {
-    while true; do
-        # prompting for choice
-        read -p "Do you want to configure ranger? (y)es/(n)o/(c)ancel:- " choice
-
-        # giving choices there tasks using
-        case $choice in
-        [yY]* ) configure_ranger; break;;
-        [nN]* ) echo "Skipping ranger configuration"; break;;
-        [cC]* ) echo "Installation cancelled"; exit ;;
-        *) echo "input is not valid!" ;;
-        esac
-    done
-}
-
 
 cd ~
 
-init_installs_prompt
-install_i3_prompt
-install_neovim_prompt
-install_pico_sdk_prompt
-configure_sakura_prompt
-configure_ranger_prompt
+prompt "Do you want to install initial packages?" "Skipping init installations" init_installs
+prompt "Do you want to install the i3 desktop environment?" "Skipping i3 environment installation" install_i3
+prompt "Do you want to install neovim?" "Skipping neovim installation" install_neovim
+prompt "Do you want to install raspberry pi pico sdk?" "Skipping pico SDK installation" install_pico_sdk
+prompt "Do you want to configure sakura?" "Skipping sakura configuration" configure_sakura
+prompt "Do you want to configure ranger?" "Skipping ranger configuration" configure_ranger
 
