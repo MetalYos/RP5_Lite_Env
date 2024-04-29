@@ -166,8 +166,15 @@ function enable_usb_automount() {
 function configure_git() {
     echo -e "${GREEN}Configuring GIT${NO_COLOR}"
 
+    # Configure git with email and name
     git config --global user.email "metalyos@gmail.com"
     git config --global user.name "Yossi Cohen"
+
+    # Copy SSH config file with github hostname
+    # TODO - check if file exists, if it does add relevant lines.
+    # else, copy file
+    mkdir -p $HOME/.ssh
+    cp $WORK_DIR/ssh_config/config $HOME/.ssh
 }
 
 function reboot() {
