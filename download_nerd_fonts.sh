@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Colors
+GREEN='\033[0;32m'
+NO_COLOR='\033[0m'
 
 # List of fonts to download
 declare -a fonts=(
@@ -41,6 +45,8 @@ fi
 
 # Do the following for every font in the fonts list
 for font in "${fonts[@]}"; do
+    echo -e "${GREEN}Downloading and installing ${font}${NO_COLOR}"
+
     zip_file="${font}.zip"
     
     # Download the font zip file
