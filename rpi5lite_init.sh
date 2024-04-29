@@ -144,6 +144,32 @@ function configure_ranger() {
     cp -r $WORK_DIR/ranger_config/* $HOME/.config
 }
 
+function enable_usb_automount() {
+    echo -e "${GREEN}Enabling USB devices automounting${NO_COLOR}"
+
+    # Clone GIT repository
+    git clone https://github.com/Ferk/udev-media-automount.git
+    cd udev-media-automount
+
+    # Install application
+    sudo make install
+
+    # Reload rules and start application
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
+    
+    # Remove the GIT repositiory
+    cd ..
+    rm -Rf udev-media-automount
+}
+
+function configure_git() {
+    echo -e "${GREEN}Configuring GIT${NO_COLOR}"
+
+    git config --global user.email "metalyos@gmail.com"
+    git config --global user.name "Yossi Cohen"
+}
+
 function reboot() {
     echo -e "${GREEN}Installation completed! rebooting...${NO_COLOR}"
     sudo reboot
@@ -158,5 +184,7 @@ prompt "Do you want to install neovim?" "Skipping neovim installation" install_n
 prompt "Do you want to install raspberry pi pico sdk?" "Skipping pico SDK installation" install_pico_sdk
 prompt "Do you want to configure sakura?" "Skipping sakura configuration" configure_sakura
 prompt "Do you want to configure ranger?" "Skipping ranger configuration" configure_ranger
+prompt "Do you want to enable USB automount?" "Skipping enabling USB automount" enable_usb_automount
+prompt "Do you want to configure GIT?" "Skipping GIT configuration" configure_git
 prompt "Fo you want to reboot?" "Installation completed!" reboot
 
